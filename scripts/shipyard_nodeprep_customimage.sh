@@ -130,6 +130,10 @@ EOF
 
 check_for_nvidia_docker() {
     set +e
+    # enable and start nvidia docker service
+    systemctl enable nvidia-docker.service
+    systemctl start nvidia-docker.service
+    systemctl status nvidia-docker.service
     nvidia-docker --version
     if [ $? -ne 0 ]; then
         echo "ERROR: nvidia-docker not installed"
@@ -165,6 +169,8 @@ check_for_nvidia() {
         echo "INFO: No Nvidia card(s) detected!"
     else
         check_for_nvidia_driver
+        # enable persistence mode
+        nvidia-smi -pm 1
     fi
 }
 
@@ -184,6 +190,10 @@ check_docker_root_dir() {
 
 check_for_docker_host_engine() {
     set +e
+    # enable and start docker service
+    systemctl enable docker.service
+    systemctl start docker.service
+    systemctl status docker.service
     docker --version
     if [ $? -ne 0 ]; then
         echo "ERROR: Docker not installed"
